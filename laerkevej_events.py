@@ -244,6 +244,12 @@ events = [
         "description": "Husk drikkevarer", 
         "start": "2026-02-11 13:00", 
         "end": "2026-02-11 23:59"
+    },
+        {
+        "name": "Vejfest6", 
+        "description": "Husk drikkevarer", 
+        "start": "2026-02-11 12:00", 
+        "end": "2026-02-11 23:59"
     }
 ]
 
@@ -278,12 +284,8 @@ for event in events:
     e = Event()
     e.name = event["name"]
     e.description = event.get("description", "")
-    # e.begin = datetime.strptime(event["start"], "%Y-%m-%d %H:%M")
-    # e.end = datetime.strptime(event["end"], "%Y-%m-%d %H:%M")
-    start_dt = datetime.strptime(event["start"], "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
-    end_dt = datetime.strptime(event["end"], "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
-    e.begin = start_dt
-    e.end = end_dt
+    e.begin = datetime.strptime(event["start"], "%Y-%m-%d %H:%M")
+    e.end = datetime.strptime(event["end"], "%Y-%m-%d %H:%M")
     e.created = now 
     add_apple_alarm(e, 1, summary=f"Husk: {event['name']}")
     cal.events.add(e)
