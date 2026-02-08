@@ -243,7 +243,7 @@ events = [
 ]
 
 cal = Calendar()
-cal.extra.append(ContentLine(name="X-WR-CALNAME", value="Lærkevej"))
+cal.extra.append(ContentLine(name="X-WR-CALNAME", value="Lærkevej begivenheder"))
 cal.extra.append(ContentLine(name="REFRESH-INTERVAL", value="PT12H"))
 
 def add_apple_alarm(event, hours_before):
@@ -286,3 +286,4 @@ with open(file_path, "wb") as f:
     f.write(clean_content.encode('utf-8'))
 
 print("File generated with DTSTAMP. Testing time!")
+# Validator: https://icalendar.org/validator.html
