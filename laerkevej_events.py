@@ -255,21 +255,22 @@ cal.extra.append(ContentLine(name="X-APPLE-DEFAULT-ALARM", value="TRUE"))
 #     event.extra.append(ContentLine(name="END", value="VALARM"))
 
 def add_apple_alarm(event, hours_before, summary="Påmindelse"):
+    """Using a more explicit trigger format for iOS subscriptions."""
     event.extra.append(ContentLine(name="BEGIN", value="VALARM"))
     event.extra.append(ContentLine(name="ACTION", value="DISPLAY"))
     event.extra.append(ContentLine(name="DESCRIPTION", value=summary))
-    event.extra.append(ContentLine(name="TRIGGER", value=f"-PT{hours_before}H"))
-    # Some iOS versions require a repeat/duration to 'notice' the alarm
-    event.extra.append(ContentLine(name="REPEAT", value="1"))
-    event.extra.append(ContentLine(name="DURATION", value="PT0S"))
+    # This format is often more successful in subscriptions:
+    # RELATED=START explicitly tells the server when to count from
+    event.extra.append(ContentLine(name="TRIGGER;RELATED=START", value=f"-PT{hours_before}H"))
     event.extra.append(ContentLine(name="END", value="VALARM"))
+
 now = datetime.now()
 
 for bday in birthdays:
     event_date = datetime.fromisoformat(bday["date"])
     e = Event()
     # event_name = f"🇩🇰 - {bday['name']} i nr. {bday['number']} har fødselsdag"
-    event_name = f"TEST2🇩🇰 - {bday['name']} i nr. {bday['number']} har fødselsdag"
+    event_name = f"TEST3🇩🇰 - {bday['name']} i nr. {bday['number']} har fødselsdag"
     e.name = event_name
     e.begin = event_date
     e.make_all_day()
