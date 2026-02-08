@@ -244,6 +244,7 @@ cal = Calendar()
 cal.extra.append(ContentLine(name="METHOD", value="PUBLISH"))
 cal.extra.append(ContentLine(name="X-WR-CALNAME", value="Lærkevej begivenheder"))
 cal.extra.append(ContentLine(name="REFRESH-INTERVAL", value="PT12H"))
+cal.extra.append(ContentLine(name="X-APPLE-DEFAULT-ALARM", value="TRUE"))
 
 def add_apple_alarm(event, hours_before, summary="Påmindelse"):
     """Enhanced VALARM for better iOS compatibility."""
