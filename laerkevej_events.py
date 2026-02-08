@@ -3,6 +3,11 @@ from datetime import datetime, timedelta, timezone
 import os
 from ics.grammar.parse import ContentLine
 
+try:
+    import zoneinfo # Python 3.9+
+except ImportError:
+    from backports import zoneinfo # For older Python versions
+
 # Path to the file you want to delete
 file_path = "laerkevej_events.ics"
 
@@ -227,30 +232,12 @@ birthdays = [
 ]
 
 events = [
-    {
-        "name": "Vejfest test3", 
-        "description": "Husk drikkevarer", 
-        "start": "2026-02-09 16:00", 
-        "end": "2026-02-09 23:59"
-    },
-    {
-        "name": "Vejfest4", 
-        "description": "Husk drikkevarer", 
-        "start": "2026-02-10 16:00", 
-        "end": "2026-02-10 23:59"
-    },
-    {
-        "name": "Vejfest5", 
-        "description": "Husk drikkevarer", 
-        "start": "2026-02-11 13:00", 
-        "end": "2026-02-11 23:59"
-    },
-    {
-        "name": "Vejfest6", 
-        "description": "Husk drikkevarer", 
-        "start": "2026-02-11 12:00", 
-        "end": "2026-02-11 23:59"
-    }
+    # {
+    #     "name": "Vejfest7", 
+    #     "description": "Husk drikkevarer", 
+    #     "start": "2026-02-11 12:00", 
+    #     "end": "2026-02-11 23:59"
+    # }
 ]
 
 cal = Calendar()
@@ -270,11 +257,11 @@ now = datetime.now()
 for bday in birthdays:
     event_date = datetime.fromisoformat(bday["date"])
     e = Event()
-    event_name = f"🇩🇰 {bday['name']} (nr. {bday['number']})"
+    event_name = f"🇩🇰 {bday['name']} i nr. {bday['number']} har fødselsdag"
     e.name = event_name
     e.begin = event_date
     e.make_all_day()
-    e.description = f"Husk flag for {bday['name']}"
+    e.description = f"Husk flag ud for {bday['name']}"
     e.created = now
     e.extra.append(ContentLine(name="RRULE", value="FREQ=YEARLY"))
     add_apple_alarm(e, 7, summary=f"Husk: {event_name}")
@@ -284,8 +271,17 @@ for event in events:
     e = Event()
     e.name = event["name"]
     e.description = event.get("description", "")
-    e.begin = datetime.strptime(event["start"], "%Y-%m-%d %H:%M")
-    e.end = datetime.strptime(event["end"], "%Y-%m-%d %H:%M")
+    # Start and end time
+    dk_tz = zoneinfo.ZoneInfo("Europe/Copenhagen")
+    # Parse the time from your list
+    naive_dt = datetime.strptime(event["start"], "%Y-%m-%d %H:%M")
+    naive_end = datetime.strptime(event["end"], "%Y-%m-%d %H:%M")
+    # This automatically detects if it's +1 (Winter) or +2 (Summer)
+    local_start = naive_dt.replace(tzinfo=dk_tz)
+    local_end = naive_end.replace(tzinfo=dk_tz)
+    # Convert to UTC for the .ics file
+    e.begin = local_start.astimezone(timezone.utc)
+    e.end = local_end.astimezone(timezone.utc)
     e.created = now 
     add_apple_alarm(e, 1, summary=f"Husk: {event['name']}")
     cal.events.add(e)
