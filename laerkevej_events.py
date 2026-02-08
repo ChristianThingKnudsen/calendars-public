@@ -243,60 +243,56 @@ events = [
 ]
 
 def add_alarm(event, hours_before):
-    """Adds a custom VALARM block to the event's extra lines."""
-    alarm_block = (
-        f"BEGIN:VALARM\n"
-        f"TRIGGER:-PT{hours_before}H\n"
-        f"ACTION:DISPLAY\n"
-        f"DESCRIPTION:Reminder\n"
+    """Adds a clean VALARM block that iOS understands."""
+    # We use a multi-line string for the alarm body
+    alarm_value = (
+        f"BEGIN:VALARM\r\n"
+        f"TRIGGER:-PT{hours_before}H\r\n"
+        f"ACTION:DISPLAY\r\n"
+        f"DESCRIPTION:Reminder\r\n"
         f"END:VALARM"
     )
-    event.extra.append(ContentLine(name="VALARM_BLOCK", value=alarm_block))
+    # Using 'VALARM' as the name is cleaner for the parser than 'VALARM_BLOCK'
+    event.extra.append(ContentLine(name="VALARM", value=alarm_value))
 
 # Create a new calendar
 cal = Calendar()
 
-print(f"Creating ics file with events {len(birthdays)} events...")
-# Add events to the calendar
+print(f"Creating ics file with {len(birthdays) + len(events)} events...")
+
+# Add Birthday events
 for bday in birthdays:
     event_date = datetime.fromisoformat(bday["date"])
-    event = Event()
-    event.name = bday["name"]
-    print(f"Adding: {event.name}...")
-    event.begin = event_date
-    event.name = f"🇩🇰 - {bday['name']} i nummer {bday['number']} har fødselsdag"
-    event.description = f"Husk at sætte flag ud for {bday['name']}"
-    event.make_all_day()
+    e = Event()
+    e.begin = event_date
+    e.name = f"🇩🇰 {bday['name']} (nr. {bday['number']}) har fødselsdag"
+    e.description = f"Husk at sætte flag ud for {bday['name']}"
+    e.make_all_day()
 
-    # Set the event to recur yearly
-    event.extra.append(ContentLine(
-            name="RRULE", value=f"FREQ=YEARLY;"))
+    # Recurrence
+    e.extra.append(ContentLine(name="RRULE", value="FREQ=YEARLY"))
     
-    # Add the event to the calendar
-    add_alarm(event, 7) # 7 hours before
-    cal.events.add(event)
+    # Add Alarm (7 hours before)
+    add_alarm(e, 7)
+    cal.events.add(e)
 
+# Add standard events
 for event in events:
     e = Event()
     e.name = event["name"]
-    e.description = event.get("description","")
+    e.description = event.get("description", "")
     e.begin = datetime.strptime(event["start"], "%Y-%m-%d %H:%M")
     e.end = datetime.strptime(event["end"], "%Y-%m-%d %H:%M")
-    add_alarm(e, 1) # 1 hour before
+    
+    # Add Alarm (1 hour before)
+    add_alarm(e, 1)
     cal.events.add(e)
 
-# Serialize the calendar to a string
-ics_content = str(cal)
+# --- THE CRITICAL FIX START ---
+# We write the file with UTF-8 encoding and avoid the .replace() hack
+# This ensures characters like 'æ' and emojis don't break the file structure.
+with open(file_path, "w", encoding='utf-8') as f:
+    f.writelines(cal.serialize_iter())
+# --- THE CRITICAL FIX END ---
 
-# Insert VALARM block for each event with 7-hour prior trigger
-ics_content = ics_content.replace(
-    "END:VEVENT",
-    "BEGIN:VALARM\nTRIGGER:-PT7H\nACTION:DISPLAY\nDESCRIPTION:Reminder\nEND:VALARM\nEND:VEVENT"
-)
-
-# Save the updated ICS content to a file
-with open(file_path, "w") as f:
-    f.write(ics_content)
-
-print("Succesfully created ics file!")
-# print("ICS file with exact 17:00 day-before alarms created successfully!")
+print("Successfully created clean ics file!")
