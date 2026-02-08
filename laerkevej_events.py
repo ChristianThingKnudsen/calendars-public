@@ -243,18 +243,17 @@ events = [
 ]
 
 cal = Calendar()
-# Essential for iOS: Prodvide a unique ID for the calendar creator
-cal.extra.append(ContentLine(name="PRODID", value="-//My Calendar//Lærkevej//DK"))
-cal.extra.append(ContentLine(name="X-WR-CALNAME", value="Lærkevej Events"))
+cal.extra.append(ContentLine(name="X-WR-CALNAME", value="Lærkevej"))
+cal.extra.append(ContentLine(name="REFRESH-INTERVAL", value="PT12H"))
 
 def add_apple_alarm(event, hours_before):
-    """Adds a VALARM block using the most compatible format for iOS."""
-    # We create the lines manually to avoid the 'ics' library escaping the internal newlines
     event.extra.append(ContentLine(name="BEGIN", value="VALARM"))
     event.extra.append(ContentLine(name="ACTION", value="DISPLAY"))
     event.extra.append(ContentLine(name="DESCRIPTION", value="Reminder"))
     event.extra.append(ContentLine(name="TRIGGER", value=f"-PT{hours_before}H"))
     event.extra.append(ContentLine(name="END", value="VALARM"))
+
+now = datetime.now()
 
 for bday in birthdays:
     event_date = datetime.fromisoformat(bday["date"])
@@ -263,11 +262,8 @@ for bday in birthdays:
     e.begin = event_date
     e.make_all_day()
     e.description = f"Husk flag for {bday['name']}"
-    
-    # Recurrence
+    e.created = now
     e.extra.append(ContentLine(name="RRULE", value="FREQ=YEARLY"))
-    
-    # Add Alarm
     add_apple_alarm(e, 7)
     cal.events.add(e)
 
@@ -277,12 +273,16 @@ for event in events:
     e.description = event.get("description", "")
     e.begin = datetime.strptime(event["start"], "%Y-%m-%d %H:%M")
     e.end = datetime.strptime(event["end"], "%Y-%m-%d %H:%M")
-    
+    e.created = now 
     add_apple_alarm(e, 1)
     cal.events.add(e)
 
-# SAVE PROCESS: Very important for Danish characters
-with open(file_path, "w", encoding='utf-8', newline='\r\n') as f:
-    f.write(cal.serialize())
+# Clean Save (Binary mode to prevent blank lines)
+raw_content = cal.serialize()
+lines = [line.strip() for line in raw_content.splitlines() if line.strip()]
+clean_content = "\r\n".join(lines) + "\r\n"
 
-print("Created ics file with Apple-compliant formatting!")
+with open(file_path, "wb") as f:
+    f.write(clean_content.encode('utf-8'))
+
+print("File generated with DTSTAMP. Testing time!")
