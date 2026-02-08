@@ -261,7 +261,7 @@ for bday in birthdays:
     e.name = event_name
     e.begin = event_date
     e.make_all_day()
-    e.description = f"Husk flag ud for {bday['name']}"
+    e.description = f"Husk at sætte flag ud for {bday['name']} 🇩🇰"
     e.created = now
     e.extra.append(ContentLine(name="RRULE", value="FREQ=YEARLY"))
     add_apple_alarm(e, 7, summary=f"Fødselsdag i morgen: {bday['name']}")
