@@ -257,14 +257,14 @@ now = datetime.now()
 for bday in birthdays:
     event_date = datetime.fromisoformat(bday["date"])
     e = Event()
-    event_name = f"🇩🇰 {bday['name']} i nr. {bday['number']} har fødselsdag"
+    event_name = f"🇩🇰 - {bday['name']} i nr. {bday['number']} har fødselsdag"
     e.name = event_name
     e.begin = event_date
     e.make_all_day()
     e.description = f"Husk flag ud for {bday['name']}"
     e.created = now
     e.extra.append(ContentLine(name="RRULE", value="FREQ=YEARLY"))
-    add_apple_alarm(e, 7, summary=f"Husk: {event_name}")
+    add_apple_alarm(e, 7, summary=f"Fødselsdag i morgen: {bday['name']}")
     cal.events.add(e)
 
 for event in events:
