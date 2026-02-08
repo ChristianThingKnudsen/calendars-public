@@ -1,5 +1,5 @@
 from ics import Calendar, Event
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import os
 from ics.grammar.parse import ContentLine
 
@@ -13,7 +13,6 @@ if os.path.exists(file_path):
 else:
     print(f"File '{file_path}' does not exist.")
 
-# Data structured as per the user's request
 birthdays = [
   {
     "date": "2024-01-02",
@@ -229,27 +228,28 @@ birthdays = [
 
 events = [
     {
-        "name": "Vejfest test", 
+        "name": "Vejfest test3", 
         "description": "Husk drikkevarer", 
         "start": "2026-02-09 16:00", 
         "end": "2026-02-09 23:59"
     },
-    # {
-    #     "name": "Vejfes2", 
-    #     "description": "Husk drikkevarer", 
-    #     "start": "2026-02-10 16:00", 
-    #     "end": "2026-02-10 23:59"
-    # }
+    {
+        "name": "Vejfest4", 
+        "description": "Husk drikkevarer", 
+        "start": "2026-02-10 16:00", 
+        "end": "2026-02-10 23:59"
+    }
 ]
 
 cal = Calendar()
 cal.extra.append(ContentLine(name="X-WR-CALNAME", value="Lærkevej begivenheder"))
 cal.extra.append(ContentLine(name="REFRESH-INTERVAL", value="PT12H"))
 
-def add_apple_alarm(event, hours_before):
+def add_apple_alarm(event, hours_before, summary="Påmindelse"):
+    """Enhanced VALARM for better iOS compatibility."""
     event.extra.append(ContentLine(name="BEGIN", value="VALARM"))
     event.extra.append(ContentLine(name="ACTION", value="DISPLAY"))
-    event.extra.append(ContentLine(name="DESCRIPTION", value="Reminder"))
+    event.extra.append(ContentLine(name="DESCRIPTION", value=summary))
     event.extra.append(ContentLine(name="TRIGGER", value=f"-PT{hours_before}H"))
     event.extra.append(ContentLine(name="END", value="VALARM"))
 
@@ -258,23 +258,28 @@ now = datetime.now()
 for bday in birthdays:
     event_date = datetime.fromisoformat(bday["date"])
     e = Event()
-    e.name = f"🇩🇰 {bday['name']} (nr. {bday['number']})"
+    event_name = f"🇩🇰 {bday['name']} (nr. {bday['number']})"
+    e.name = event_name
     e.begin = event_date
     e.make_all_day()
     e.description = f"Husk flag for {bday['name']}"
     e.created = now
     e.extra.append(ContentLine(name="RRULE", value="FREQ=YEARLY"))
-    add_apple_alarm(e, 7)
+    add_apple_alarm(e, 7, summary=f"Husk: {event_name}")
     cal.events.add(e)
 
 for event in events:
     e = Event()
     e.name = event["name"]
     e.description = event.get("description", "")
-    e.begin = datetime.strptime(event["start"], "%Y-%m-%d %H:%M")
-    e.end = datetime.strptime(event["end"], "%Y-%m-%d %H:%M")
+    # e.begin = datetime.strptime(event["start"], "%Y-%m-%d %H:%M")
+    # e.end = datetime.strptime(event["end"], "%Y-%m-%d %H:%M")
+    start_dt = datetime.strptime(event["start"], "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
+    end_dt = datetime.strptime(event["end"], "%Y-%m-%d %H:%M").replace(tzinfo=timezone.utc)
+    e.begin = start_dt
+    e.end = end_dt
     e.created = now 
-    add_apple_alarm(e, 1)
+    add_apple_alarm(e, 1, summary=f"Husk: {event['name']}")
     cal.events.add(e)
 
 # Clean Save (Binary mode to prevent blank lines)
@@ -285,5 +290,5 @@ clean_content = "\r\n".join(lines) + "\r\n"
 with open(file_path, "wb") as f:
     f.write(clean_content.encode('utf-8'))
 
-print("File generated with DTSTAMP. Testing time!")
+print("ics file sucessfully generated!")
 # Validator: https://icalendar.org/validator.html
