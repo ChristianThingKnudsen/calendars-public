@@ -246,14 +246,6 @@ cal.extra.append(ContentLine(name="X-WR-CALNAME", value="Lærkevej begivenheder"
 cal.extra.append(ContentLine(name="REFRESH-INTERVAL", value="PT12H"))
 cal.extra.append(ContentLine(name="X-APPLE-DEFAULT-ALARM", value="TRUE"))
 
-# def add_apple_alarm(event, hours_before, summary="Påmindelse"):
-#     """Enhanced VALARM for better iOS compatibility."""
-#     event.extra.append(ContentLine(name="BEGIN", value="VALARM"))
-#     event.extra.append(ContentLine(name="ACTION", value="DISPLAY"))
-#     event.extra.append(ContentLine(name="DESCRIPTION", value=summary))
-#     event.extra.append(ContentLine(name="TRIGGER", value=f"-PT{hours_before}H"))
-#     event.extra.append(ContentLine(name="END", value="VALARM"))
-
 def add_apple_alarm(event, hours_before, summary="Påmindelse"):
     """Using a more explicit trigger format for iOS subscriptions."""
     event.extra.append(ContentLine(name="BEGIN", value="VALARM"))
@@ -269,8 +261,7 @@ now = datetime.now()
 for bday in birthdays:
     event_date = datetime.fromisoformat(bday["date"])
     e = Event()
-    # event_name = f"🇩🇰 - {bday['name']} i nr. {bday['number']} har fødselsdag"
-    event_name = f"TEST3🇩🇰 - {bday['name']} i nr. {bday['number']} har fødselsdag"
+    event_name = f"🇩🇰 - {bday['name']} i nr. {bday['number']} har fødselsdag"
     e.name = event_name
     e.begin = event_date
     e.make_all_day()
