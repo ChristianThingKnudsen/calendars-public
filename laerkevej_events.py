@@ -29,11 +29,11 @@ birthdays = [
     "name": "Silke",
     "number": 1
   },
-  # {
-  #   "date": "2024-02-09",
-  #   "name": "Astrid",
-  #   "number": 10
-  # },
+  {
+    "date": "2024-02-09",
+    "name": "Astrid",
+    "number": 10
+  },
   # {
   #   "date": "2024-02-13",
   #   "name": "Cecilie",
