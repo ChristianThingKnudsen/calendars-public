@@ -238,6 +238,12 @@ events = [
         "description": "Husk drikkevarer", 
         "start": "2026-02-10 16:00", 
         "end": "2026-02-10 23:59"
+    },
+    {
+        "name": "Vejfest5", 
+        "description": "Husk drikkevarer", 
+        "start": "2026-02-11 13:00", 
+        "end": "2026-02-11 23:59"
     }
 ]
 
