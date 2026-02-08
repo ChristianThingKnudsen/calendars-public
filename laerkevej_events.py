@@ -242,41 +242,35 @@ events = [
     # }
 ]
 
-def add_alarm(event, hours_before):
-    """Adds a clean VALARM block that iOS understands."""
-    # We use a multi-line string for the alarm body
-    alarm_value = (
-        f"BEGIN:VALARM\r\n"
-        f"TRIGGER:-PT{hours_before}H\r\n"
-        f"ACTION:DISPLAY\r\n"
-        f"DESCRIPTION:Reminder\r\n"
-        f"END:VALARM"
-    )
-    # Using 'VALARM' as the name is cleaner for the parser than 'VALARM_BLOCK'
-    event.extra.append(ContentLine(name="VALARM", value=alarm_value))
-
-# Create a new calendar
 cal = Calendar()
+# Essential for iOS: Prodvide a unique ID for the calendar creator
+cal.extra.append(ContentLine(name="PRODID", value="-//My Calendar//Lærkevej//DK"))
+cal.extra.append(ContentLine(name="X-WR-CALNAME", value="Lærkevej Events"))
 
-print(f"Creating ics file with {len(birthdays) + len(events)} events...")
+def add_apple_alarm(event, hours_before):
+    """Adds a VALARM block using the most compatible format for iOS."""
+    # We create the lines manually to avoid the 'ics' library escaping the internal newlines
+    event.extra.append(ContentLine(name="BEGIN", value="VALARM"))
+    event.extra.append(ContentLine(name="ACTION", value="DISPLAY"))
+    event.extra.append(ContentLine(name="DESCRIPTION", value="Reminder"))
+    event.extra.append(ContentLine(name="TRIGGER", value=f"-PT{hours_before}H"))
+    event.extra.append(ContentLine(name="END", value="VALARM"))
 
-# Add Birthday events
 for bday in birthdays:
     event_date = datetime.fromisoformat(bday["date"])
     e = Event()
+    e.name = f"🇩🇰 {bday['name']} (nr. {bday['number']})"
     e.begin = event_date
-    e.name = f"🇩🇰 {bday['name']} (nr. {bday['number']}) har fødselsdag"
-    e.description = f"Husk at sætte flag ud for {bday['name']}"
     e.make_all_day()
-
+    e.description = f"Husk flag for {bday['name']}"
+    
     # Recurrence
     e.extra.append(ContentLine(name="RRULE", value="FREQ=YEARLY"))
     
-    # Add Alarm (7 hours before)
-    add_alarm(e, 7)
+    # Add Alarm
+    add_apple_alarm(e, 7)
     cal.events.add(e)
 
-# Add standard events
 for event in events:
     e = Event()
     e.name = event["name"]
@@ -284,15 +278,11 @@ for event in events:
     e.begin = datetime.strptime(event["start"], "%Y-%m-%d %H:%M")
     e.end = datetime.strptime(event["end"], "%Y-%m-%d %H:%M")
     
-    # Add Alarm (1 hour before)
-    add_alarm(e, 1)
+    add_apple_alarm(e, 1)
     cal.events.add(e)
 
-# --- THE CRITICAL FIX START ---
-# We write the file with UTF-8 encoding and avoid the .replace() hack
-# This ensures characters like 'æ' and emojis don't break the file structure.
-with open(file_path, "w", encoding='utf-8') as f:
-    f.writelines(cal.serialize_iter())
-# --- THE CRITICAL FIX END ---
+# SAVE PROCESS: Very important for Danish characters
+with open(file_path, "w", encoding='utf-8', newline='\r\n') as f:
+    f.write(cal.serialize())
 
-print("Successfully created clean ics file!")
+print("Created ics file with Apple-compliant formatting!")
