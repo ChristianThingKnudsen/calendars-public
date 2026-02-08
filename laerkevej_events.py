@@ -229,7 +229,7 @@ birthdays = [
 
 events = [
     {
-        "name": "Vejfest", 
+        "name": "Vejfest test", 
         "description": "Husk drikkevarer", 
         "start": "2026-02-09 16:00", 
         "end": "2026-02-09 23:59"
