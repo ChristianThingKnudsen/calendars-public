@@ -393,7 +393,7 @@ for trash_event in trash_events_to_process:
   e = Event()
   event_name = trash_event_to_name(trash_event)
   e.name = event_name
-  e.description = "🗑️ hentes i morgen tidlig, så det skal stilles ud til vejen nu"
+  e.description = trash_prefix("Skrald hentes i morgen tidlig, så det skal stilles ud til vejen nu")
   # Start and end time
   dk_tz = zoneinfo.ZoneInfo("Europe/Copenhagen")
   # Parse the time from your list
