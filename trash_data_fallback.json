@@ -1,0 +1,443 @@
+{
+    "standplads": {
+        "nummer": "018615",
+        "navn": "L\u00e6rkevej 1, 8660 Skanderborg",
+        "beskrivelse": null,
+        "adresse": {
+            "navn": "L\u00e6rkevej 1, 8660 Skanderborg",
+            "vejnavn": "L\u00e6rkevej",
+            "husnummer": "1",
+            "etage": null,
+            "sided\u00f8r": null,
+            "postdistrikt": "Skanderborg",
+            "postnummer": "8660",
+            "kvhxcode": "07460630___1_______",
+            "kommunenummer": 746,
+            "vejkode": 630,
+            "breddegrad": 56.0382579095197,
+            "laengdegrad": 9.94944236430504
+        },
+        "l\u00e6ngdegrad": 6210744.13,
+        "breddegrad": 559155.12,
+        "sidst\u00e6ndret": "2026-02-08T11:13:21Z",
+        "beholder": null
+    },
+    "planlagtet\u00f8mninger": [
+        {
+            "dato": "2026-02-11T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-02-12T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-02-20T00:00:00Z",
+            "fraktioner": [
+                "Pap",
+                "Papir",
+                "Tekstilaffald"
+            ]
+        },
+        {
+            "dato": "2026-02-26T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-03-04T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-03-12T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-03-25T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-03-26T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-04-03T00:00:00Z",
+            "fraktioner": [
+                "Pap",
+                "Papir",
+                "Tekstilaffald"
+            ]
+        },
+        {
+            "dato": "2026-04-09T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-04-15T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-04-23T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-05-06T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-05-07T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-05-15T00:00:00Z",
+            "fraktioner": [
+                "Pap",
+                "Papir",
+                "Tekstilaffald"
+            ]
+        },
+        {
+            "dato": "2026-05-21T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-05-27T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-06-04T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-06-17T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-06-18T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-06-26T00:00:00Z",
+            "fraktioner": [
+                "Pap",
+                "Papir",
+                "Tekstilaffald"
+            ]
+        },
+        {
+            "dato": "2026-07-02T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-07-08T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-07-16T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-07-29T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-07-30T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-08-07T00:00:00Z",
+            "fraktioner": [
+                "Pap",
+                "Papir",
+                "Tekstilaffald"
+            ]
+        },
+        {
+            "dato": "2026-08-13T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-08-19T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-08-27T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-09-09T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-09-10T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-09-18T00:00:00Z",
+            "fraktioner": [
+                "Pap",
+                "Papir",
+                "Tekstilaffald"
+            ]
+        },
+        {
+            "dato": "2026-09-24T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-09-30T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-10-08T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-10-21T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-10-22T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-10-30T00:00:00Z",
+            "fraktioner": [
+                "Pap",
+                "Papir",
+                "Tekstilaffald"
+            ]
+        },
+        {
+            "dato": "2026-11-05T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-11-11T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-11-19T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-12-02T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-12-03T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-12-11T00:00:00Z",
+            "fraktioner": [
+                "Pap",
+                "Papir",
+                "Tekstilaffald"
+            ]
+        },
+        {
+            "dato": "2026-12-17T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2026-12-23T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2026-12-31T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2027-01-13T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        },
+        {
+            "dato": "2027-01-14T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2027-01-22T00:00:00Z",
+            "fraktioner": [
+                "Pap",
+                "Papir",
+                "Tekstilaffald"
+            ]
+        },
+        {
+            "dato": "2027-01-28T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
+            ]
+        },
+        {
+            "dato": "2027-02-03T00:00:00Z",
+            "fraktioner": [
+                "Glas",
+                "Metal",
+                "Mad- og drikkekartoner",
+                "Plast"
+            ]
+        }
+    ]
+}

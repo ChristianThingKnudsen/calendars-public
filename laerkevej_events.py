@@ -1,12 +1,34 @@
 from ics import Calendar, Event
 from datetime import datetime, timedelta, timezone
+import requests
+import json
 import os
 from ics.grammar.parse import ContentLine
-
 try:
     import zoneinfo # Python 3.9+
 except ImportError:
     from backports import zoneinfo # For older Python versions
+
+
+def print_separator(char='=', length=50):
+    """
+    Prints a separator line to the console.
+    
+    Parameters:
+    char (str): The character to use for the separator. Default is '-'.
+    length (int): The length of the separator line. Default is 50.
+    """
+    print(char * length)
+
+print_separator() 
+# Get the current time
+current_time = datetime.now()
+# Format the time in a readable format
+formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+
+# Print the formatted time
+print(formatted_time)
+print_separator() 
 
 # Path to the file you want to delete
 file_path = "laerkevej_events.ics"
@@ -240,11 +262,33 @@ events = [
     # }
 ]
 
-cal = Calendar()
-cal.extra.append(ContentLine(name="METHOD", value="PUBLISH"))
-cal.extra.append(ContentLine(name="X-WR-CALNAME", value="Lærkevej begivenheder"))
-cal.extra.append(ContentLine(name="REFRESH-INTERVAL", value="PT12H"))
-cal.extra.append(ContentLine(name="X-APPLE-DEFAULT-ALARM", value="TRUE"))
+def trash_prefix(last):
+    return "🗑️ - " + last
+
+def trash_event_to_name(event):
+    fractions = event["fraktioner"]
+    
+    if not fractions:
+        return ""
+    elif len(fractions) == 1:
+        return trash_prefix(fractions[0])
+    # Join all elements except the last one with ", "
+    result = ", ".join(fractions[:-1])
+    # Add " og " before the last element
+    result += " og " + fractions[-1]
+    return trash_prefix(result)
+
+def get_trash_event_date(event): 
+    # Parse the date string into a datetime object
+    date_str = event["dato"]
+    event_datetime = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
+    # Subtract one day
+    event_datetime = event_datetime - timedelta(days=1)
+    # Set the time to 08:00 AM
+    event_datetime = event_datetime.replace(hour=20, minute=0, second=0, microsecond=0)
+    # Return the modified datetime
+    return event_datetime
+
 
 def add_apple_alarm(event, hours_before, summary="Påmindelse"):
     """Using a more explicit trigger format for iOS subscriptions."""
@@ -255,6 +299,12 @@ def add_apple_alarm(event, hours_before, summary="Påmindelse"):
     # RELATED=START explicitly tells the server when to count from
     event.extra.append(ContentLine(name="TRIGGER;RELATED=START", value=f"-PT{hours_before}H"))
     event.extra.append(ContentLine(name="END", value="VALARM"))
+
+cal = Calendar()
+cal.extra.append(ContentLine(name="METHOD", value="PUBLISH"))
+cal.extra.append(ContentLine(name="X-WR-CALNAME", value="Lærkevej begivenheder"))
+cal.extra.append(ContentLine(name="REFRESH-INTERVAL", value="PT12H"))
+cal.extra.append(ContentLine(name="X-APPLE-DEFAULT-ALARM", value="TRUE"))
 
 now = datetime.now()
 
@@ -290,6 +340,75 @@ for event in events:
     add_apple_alarm(e, 1, summary=f"Husk: {event['name']}")
     cal.events.add(e)
 
+
+# Dynamic trash events
+url = "https://mit.renosyd.dk/_query/tommekalender-page-content.Hent%20T%C3%B8mmekalender"
+body = {
+    "url": "https://skoda-selvbetjeningsapi.renosyd.dk/api/v1/toemmekalender?nummer=018615",
+    "method": "GET",
+    "auth": None,
+    "headers": {}
+}
+trash_data = {}
+cache_file = "trash_data_fallback.json"
+response = requests.post(url, json=body, timeout=15)
+try:
+    response = requests.post(url, json=body, timeout=15)
+    if response.status_code == 200:
+        json_data = response.json()
+        # Double-check we actually got data before saving
+        if json_data and len(json_data) > 0:
+            trash_data = json_data[0]
+            # Save the "Last Known Good" version
+            with open(cache_file, 'w') as f:
+                json.dump(trash_data, f, indent=4)
+            print(trash_prefix("Sucessfully retrieved trash data from api!"))
+        else:
+            print(trash_prefix("API returned empty list. Falling back..."))
+            raise ValueError("Empty Data")
+            
+    else:
+        print(trash_prefix(f"API Error {response.status_code}. Falling back..."))
+        raise ConnectionError
+
+except (requests.exceptions.RequestException, ValueError, ConnectionError, IndexError):
+    # Try to load the file saved from a previous successful run
+    if os.path.exists(cache_file):
+        with open(cache_file, 'r') as f:
+            trash_data = json.load(f)
+            print(trash_prefix(f"Using fallback data from {cache_file}"))
+    else:
+        print(trash_prefix("No fallback file found and API failed."))
+        trash_data = {} # Final fallback to empty object
+
+upcoming_empties = trash_data.get("planlagtetømninger", [])
+if not isinstance(upcoming_empties, list):
+    upcoming_empties = []
+number_of_trash_events = len(upcoming_empties)
+trash_events_to_process = upcoming_empties[:9] if number_of_trash_events >= 9 else upcoming_empties
+
+print(trash_prefix(f"Fandt {len(trash_events_to_process)} tømninger der tilføjes nu"))
+
+for trash_event in trash_events_to_process:
+  e = Event()
+  event_name = trash_event_to_name(trash_event)
+  e.name = event_name
+  e.description = "🗑️ hentes i morgen tidlig, så det skal stilles ud til vejen nu"
+  # Start and end time
+  dk_tz = zoneinfo.ZoneInfo("Europe/Copenhagen")
+  # Parse the time from your list
+  naive_dt = get_trash_event_date(trash_event)
+  naive_end = naive_dt + timedelta(hours=2)
+  # This automatically detects if it's +1 (Winter) or +2 (Summer)
+  local_start = naive_dt.replace(tzinfo=dk_tz)
+  local_end = naive_end.replace(tzinfo=dk_tz)
+  # Convert to UTC for the .ics file
+  e.begin = local_start.astimezone(timezone.utc)
+  e.end = local_end.astimezone(timezone.utc)
+  e.created = now 
+  add_apple_alarm(e, 3, summary=f"Husk: {event_name}")
+  cal.events.add(e)
+
 # Clean Save (Binary mode to prevent blank lines)
 raw_content = cal.serialize()
 lines = [line.strip() for line in raw_content.splitlines() if line.strip()]
@@ -298,5 +417,6 @@ clean_content = "\r\n".join(lines) + "\r\n"
 with open(file_path, "wb") as f:
     f.write(clean_content.encode('utf-8'))
 
-print("ics file sucessfully generated!")
+print_separator() 
+print(f"'{file_path}' sucessfully generated!")
 # Validator: https://icalendar.org/validator.html
