@@ -341,6 +341,21 @@ for event in events:
     cal.events.add(e)
 
 
+# Old trash events (for history)
+trash_history_file = "trash_history.json"
+trash_history_data = []
+if os.path.exists(trash_history_file):
+    with open(trash_history_file, 'r', encoding='utf-8') as f:
+        try:
+            trash_history_data = json.load(f)
+        except json.JSONDecodeError:
+            trash_history_data = []
+
+print(trash_prefix(f"Fandt {len(trash_history_data)} tidligere tømninger der tilføjes nu"))
+
+# Extract dates we already have to avoid duplicates
+existing_trash_dates = {item["dato"] for item in trash_history_data}
+
 # Dynamic trash events
 url = "https://mit.renosyd.dk/_query/tommekalender-page-content.Hent%20T%C3%B8mmekalender"
 body = {
@@ -384,8 +399,45 @@ except (requests.exceptions.RequestException, ValueError, ConnectionError, Index
 upcoming_empties = trash_data.get("planlagtetømninger", [])
 if not isinstance(upcoming_empties, list):
     upcoming_empties = []
+
+# Fake test event
+# fake_event = {
+#     "dato": "2026-02-10T00:00:00Z",  # Use a date in the near future
+#     "fraktioner": ["Restaffald", "Genbrug"]
+# }
+# upcoming_empties.append(fake_event)
+
+new_history_added = False
+current_date_iso = datetime.now(timezone.utc).date().isoformat()
+# Fake current date if nessecary for test
+# current_date_iso = (datetime.now(timezone.utc) + timedelta(days=8)).date().isoformat()
+
+for entry in upcoming_empties:
+    if entry["dato"] not in existing_trash_dates:
+        event_date = entry["dato"].split("T")[0]
+        if event_date <= current_date_iso:
+            trash_history_data.append(entry)
+            existing_trash_dates.add(entry["dato"])
+            new_history_added = True
+            print(trash_prefix(f"Archived past event: {entry['dato']}"))
+
+if new_history_added:
+    print("Trash event(s) added to history")
+    trash_history_data.sort(key=lambda x: x["dato"])
+    with open(trash_history_file, 'w', encoding='utf-8') as f:
+        json.dump(trash_history_data, f, indent=4, ensure_ascii=False)
+else:
+    print("No trash events added to history")
+    
+
 number_of_trash_events = len(upcoming_empties)
-trash_events_to_process = upcoming_empties[:9] if number_of_trash_events >= 9 else upcoming_empties
+raw_future_events = upcoming_empties[:9] if number_of_trash_events >= 9 else upcoming_empties
+# Ensure no duplicate events are made
+future_trash_events = [
+    e for e in raw_future_events 
+    if e["dato"] not in existing_trash_dates
+]
+trash_events_to_process = future_trash_events + trash_history_data
 
 print(trash_prefix(f"Fandt {len(trash_events_to_process)} tømninger der tilføjes nu"))
 
