@@ -49,7 +49,8 @@ birthdays = [
   {
     "date": "2026-01-18",
     "name": "Silke",
-    "number": 1
+    "number": 1,
+    "showBirthYear": True
   },
   {
     "date": "2024-02-09",
@@ -57,9 +58,10 @@ birthdays = [
     "number": 10
   },
   {
-    "date": "2024-02-13",
+    "date": "1997-02-13",
     "name": "Cecilie",
-    "number": 1
+    "number": 1,
+    "showBirthYear": True
   },
   {
     "date": "2024-02-23",
@@ -127,9 +129,10 @@ birthdays = [
     "number": 3
   },
   {
-    "date": "2024-05-18",
+    "date": "1996-05-18",
     "name": "Christian",
-    "number": 1
+    "number": 1,
+    "showBirthYear": True
   },
   {
     "date": "2024-05-21",
@@ -311,7 +314,17 @@ now = datetime.now()
 for bday in birthdays:
     event_date = datetime.fromisoformat(bday["date"])
     e = Event()
-    event_name = f"🇩🇰 - {bday['name']} i nr. {bday['number']} har fødselsdag"
+    show_age = bday.get("showBirthYear", False)
+    event_name = f"🇩🇰 - {bday['name']} i nr. {bday['number']} "
+    if show_age:
+        age = now.year - event_date.year
+        # Round birthday
+        if age > 0 and age % 10 == 0:
+            event_name += f"fylder rund ({age}) 🍾"
+        else:
+            event_name += f"har fødselsdag"
+    else:
+        event_name += f"har fødselsdag"
     e.name = event_name
     e.begin = event_date
     e.make_all_day()
