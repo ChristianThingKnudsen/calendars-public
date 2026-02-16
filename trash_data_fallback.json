@@ -19,7 +19,7 @@
         },
         "l\u00e6ngdegrad": 6210744.13,
         "breddegrad": 559155.12,
-        "sidst\u00e6ndret": "2026-02-08T11:13:21Z",
+        "sidst\u00e6ndret": "2026-02-15T11:12:46Z",
         "beholder": null
     },
     "planlagtet\u00f8mninger": [
@@ -421,6 +421,13 @@
                 "Metal",
                 "Mad- og drikkekartoner",
                 "Plast"
+            ]
+        },
+        {
+            "dato": "2027-02-11T00:00:00Z",
+            "fraktioner": [
+                "Restaffald",
+                "Madaffald"
             ]
         }
     ]
