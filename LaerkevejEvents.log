@@ -695,3 +695,15 @@ No trash events added to history
 🗑️ - Fandt 18 tømninger der tilføjes nu
 ==================================================
 'laerkevej_events.ics' sucessfully generated!
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.6.3) or chardet (4.0.0) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+==================================================
+2026-04-17 06:00:04
+==================================================
+File 'laerkevej_events.ics' has been deleted successfully.
+🗑️ - Fandt 9 tidligere tømninger der tilføjes nu
+🗑️ - Sucessfully retrieved trash data from api!
+No trash events added to history
+🗑️ - Fandt 18 tømninger der tilføjes nu
+==================================================
+'laerkevej_events.ics' sucessfully generated!
