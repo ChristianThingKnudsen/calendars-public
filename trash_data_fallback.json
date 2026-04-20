@@ -19,7 +19,7 @@
         },
         "l\u00e6ngdegrad": 6210744.13,
         "breddegrad": 559155.12,
-        "sidst\u00e6ndret": "2026-04-12T10:12:49Z",
+        "sidst\u00e6ndret": "2026-04-19T10:12:57Z",
         "beholder": null
     },
     "planlagtet\u00f8mninger": [
@@ -420,6 +420,14 @@
             "fraktioner": [
                 "Restaffald",
                 "Madaffald"
+            ]
+        },
+        {
+            "dato": "2027-04-16T00:00:00Z",
+            "fraktioner": [
+                "Pap",
+                "Papir",
+                "Tekstilaffald"
             ]
         }
     ]
