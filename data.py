@@ -81,11 +81,6 @@ birthdays: List[BirthdayEntry] = [
     "number": 4
   },
   {
-    "date": "2024-04-22",
-    "name": "Lissen",
-    "number": 5
-  },
-  {
     "date": "2024-05-06",
     "name": "Eleonora",
     "number": 16
@@ -231,9 +226,9 @@ class EventEntry(TypedDict, total=False):
 
 events: List[EventEntry] = [
     # {
-    #     "name": "Vejfest7", 
-    #     "description": "Husk drikkevarer", 
-    #     "start": "2026-02-11 12:00", 
+    #     "name": "Vejfest7",
+    #     "description": "Husk drikkevarer",
+    #     "start": "2026-02-11 12:00",
     #     "end": "2026-02-11 23:59"
     # }
 ]

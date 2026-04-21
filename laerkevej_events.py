@@ -13,18 +13,18 @@ except ImportError:
     from backports import zoneinfo # For older Python versions
 
 try:
-    
+
   def print_separator(char='=', length=50):
       """
       Prints a separator line to the console.
-      
+
       Parameters:
       char (str): The character to use for the separator. Default is '-'.
       length (int): The length of the separator line. Default is 50.
       """
       print(char * length)
 
-  print_separator() 
+  print_separator()
   # Get the current time
   current_time = datetime.now()
   # Format the time in a readable format
@@ -32,7 +32,7 @@ try:
 
   # Print the formatted time
   print(formatted_time)
-  print_separator() 
+  print_separator()
 
   # Path to the file you want to delete
   file_path = "laerkevej_events.ics"
@@ -49,7 +49,7 @@ try:
 
   def trash_event_to_name(event):
       fractions = event["fraktioner"]
-      
+
       if not fractions:
           return ""
       elif len(fractions) == 1:
@@ -60,7 +60,7 @@ try:
       result += " og " + fractions[-1]
       return trash_prefix(result)
 
-  def get_trash_event_date(event): 
+  def get_trash_event_date(event):
       # Parse the date string into a datetime object
       date_str = event["dato"]
       event_datetime = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
@@ -128,7 +128,7 @@ try:
       # Convert to UTC for the .ics file
       e.begin = local_start.astimezone(timezone.utc)
       e.end = local_end.astimezone(timezone.utc)
-      e.created = now 
+      e.created = now
       add_apple_alarm(e, 1, summary=f"Husk: {event['name']}")
       cal.events.add(e)
 
@@ -173,7 +173,7 @@ try:
           else:
               print(trash_prefix("API returned empty list. Falling back..."))
               raise ValueError("Empty Data")
-              
+
       else:
           print(trash_prefix(f"API Error {response.status_code}. Falling back..."))
           raise ConnectionError
@@ -220,13 +220,13 @@ try:
           json.dump(trash_history_data, f, indent=4, ensure_ascii=False)
   else:
       print("No trash events added to history")
-      
+
 
   number_of_trash_events = len(upcoming_empties)
   raw_future_events = upcoming_empties[:9] if number_of_trash_events >= 9 else upcoming_empties
   # Ensure no duplicate events are made
   future_trash_events = [
-      e for e in raw_future_events 
+      e for e in raw_future_events
       if e["dato"] not in existing_trash_dates
   ]
   trash_events_to_process = future_trash_events + trash_history_data
@@ -249,7 +249,7 @@ try:
     # Convert to UTC for the .ics file
     e.begin = local_start.astimezone(timezone.utc)
     e.end = local_end.astimezone(timezone.utc)
-    e.created = now 
+    e.created = now
     add_apple_alarm(e, 3, summary=f"Husk: {event_name}")
     cal.events.add(e)
 
@@ -261,7 +261,7 @@ try:
   with open(file_path, "wb") as f:
       f.write(clean_content.encode('utf-8'))
 
-  print_separator() 
+  print_separator()
   print(f"'{file_path}' sucessfully generated!")
   # Validator: https://icalendar.org/validator.html
 
