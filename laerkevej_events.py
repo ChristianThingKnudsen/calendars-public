@@ -256,14 +256,16 @@ try:
 
 
   #Electric events
-  electric_incidents_url = "https://api.elnet.greenpowerdenmark.dk/api/incidents"
+  electric_incidents_url = "https://api.elnet.greenpowerdenmark.dk/api/incidents?showType=1&skip=0&supplierId=14&top="
 
   with urllib.request.urlopen(electric_incidents_url) as response:
     incidents = json.loads(response.read())
 
   skanderborg_incidents = [
-      i for i in incidents
-      if "8660" in (i.get("zipcodes") or "").split(",")
+    i for i in incidents
+    if "8660" in (i.get("zipcodes") or "").split(",")
+    or "Skanderborg" in (i.get("title") or "")
+    or "Skanderborg" in (i.get("cause") or "")
   ]
 
   if skanderborg_incidents:
