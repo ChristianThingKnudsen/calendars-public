@@ -6,6 +6,7 @@ import os
 from ics.grammar.parse import ContentLine
 from data import birthdays, events
 from email_utils import send_error_email
+import urllib.request
 import traceback
 try:
     import zoneinfo # Python 3.9+
@@ -252,6 +253,41 @@ try:
     e.created = now
     add_apple_alarm(e, 3, summary=f"Husk: {event_name}")
     cal.events.add(e)
+
+
+  #Electric events
+  electric_incidents_url = "https://api.elnet.greenpowerdenmark.dk/api/incidents"
+
+  with urllib.request.urlopen(electric_incidents_url) as response:
+    incidents = json.loads(response.read())
+
+  skanderborg_incidents = [
+      i for i in incidents
+      if "8660" in (i.get("zipcodes") or "").split(",")
+  ]
+
+  if skanderborg_incidents:
+    for i in skanderborg_incidents:
+        print(f"{i['title']} ({i['incidentType']})")
+        print(f"  Start: {i['startDate']}")
+        print(f"  Forventet afslutning: {i['expectedDowntime']}")
+        print(f"  Berørte kunder: {i['effectedCustomers']}")
+        print(f"  Årsag: {i['cause']}")
+
+        # Add calendar event
+        e = Event()
+        e.name = f"🔌 - {i['title']}"
+        e.description = i.get("cause", "")
+        dk_tz = zoneinfo.ZoneInfo("Europe/Copenhagen")
+        start_dt = datetime.fromisoformat(i["startDate"]).replace(tzinfo=dk_tz)
+        end_dt = datetime.fromisoformat(i["expectedDowntime"]).replace(tzinfo=dk_tz)
+        e.begin = start_dt.astimezone(timezone.utc)
+        e.end = end_dt.astimezone(timezone.utc)
+        e.created = now
+        add_apple_alarm(e, 1, summary=f"Strømafbrud: {i['title']}")
+        cal.events.add(e)
+  else:
+    print("Ingen aktive hændelser i Skanderborg (8660)")
 
   # Clean Save (Binary mode to prevent blank lines)
   raw_content = cal.serialize()
