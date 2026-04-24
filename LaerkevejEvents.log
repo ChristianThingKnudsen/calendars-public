@@ -843,3 +843,20 @@ Afbrud i Skanderborg, Østbirk, Odder, Hørning, Ry, Hovedgård, Gedved, Solbjer
   Årsag: Der er i øjeblikket strømafbrydelse pga. fejl i forsyningsnettet. Vi er allerede i gang med at lokalisere/rette fejlen og håber snarest at kunne genetablere forsyningen.
 ==================================================
 'laerkevej_events.ics' sucessfully generated!
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.6.3) or chardet (4.0.0) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+==================================================
+2026-04-24 16:55:04
+==================================================
+File 'laerkevej_events.ics' has been deleted successfully.
+🗑️ - Fandt 10 tidligere tømninger der tilføjes nu
+🗑️ - Sucessfully retrieved trash data from api!
+No trash events added to history
+🗑️ - Fandt 19 tømninger der tilføjes nu
+Afbrud i Skanderborg, Østbirk, Odder, Hørning, Ry, Hovedgård, Gedved, Solbjerg, Mårslet, Tranbjerg J, Hasselager (Uvarslet)
+  Start: 2026-04-21T23:30:00
+  Forventet afslutning: 2026-04-22T02:00:00
+  Berørte kunder: 20972
+  Årsag: Der er i øjeblikket strømafbrydelse pga. fejl i forsyningsnettet. Vi er allerede i gang med at lokalisere/rette fejlen og håber snarest at kunne genetablere forsyningen.
+==================================================
+'laerkevej_events.ics' sucessfully generated!
