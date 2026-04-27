@@ -2066,3 +2066,20 @@ Afbrud i Skanderborg (Planlagt)
   Årsag: Der vil onsdag d. 29. april  kl 07:30  til onsdag d. 29. april  kl 08:30  være strømafbrydelse pga. vedligeholdelsesarbejde.
 ==================================================
 'laerkevej_events.ics' sucessfully generated!
+/usr/lib/python3/dist-packages/requests/__init__.py:87: RequestsDependencyWarning: urllib3 (2.6.3) or chardet (4.0.0) doesn't match a supported version!
+  warnings.warn("urllib3 ({}) or chardet ({}) doesn't match a supported "
+==================================================
+2026-04-27 23:55:04
+==================================================
+File 'laerkevej_events.ics' has been deleted successfully.
+🗑️ - Fandt 10 tidligere tømninger der tilføjes nu
+🗑️ - Sucessfully retrieved trash data from api!
+No trash events added to history
+🗑️ - Fandt 19 tømninger der tilføjes nu
+Afbrud i Skanderborg (Planlagt)
+  Start: 2026-04-29T07:30:00
+  Forventet afslutning: 2026-04-29T08:30:00
+  Berørte kunder: 10
+  Årsag: Der vil onsdag d. 29. april  kl 07:30  til onsdag d. 29. april  kl 08:30  være strømafbrydelse pga. vedligeholdelsesarbejde.
+==================================================
+'laerkevej_events.ics' sucessfully generated!
