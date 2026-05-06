@@ -76,5 +76,14 @@
             "Restaffald",
             "Madaffald"
         ]
+    },
+    {
+        "dato": "2026-05-06T00:00:00Z",
+        "fraktioner": [
+            "Glas",
+            "Metal",
+            "Mad- og drikkekartoner",
+            "Plast"
+        ]
     }
 ]
