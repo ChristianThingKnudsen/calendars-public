@@ -85,5 +85,12 @@
             "Mad- og drikkekartoner",
             "Plast"
         ]
+    },
+    {
+        "dato": "2026-05-07T00:00:00Z",
+        "fraktioner": [
+            "Restaffald",
+            "Madaffald"
+        ]
     }
 ]
