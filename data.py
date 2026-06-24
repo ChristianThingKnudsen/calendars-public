@@ -228,7 +228,7 @@ events: List[EventEntry] = [
     {
         "name": "🥳 - Lærkevej vejfest",
         "description": "10.00 - Teltopsætning \n16.00 - spil \n17.00 - velkomst og festen går i gang",
-        "start": "2026-08-25 10:00",
-        "end": "2026-08-25 23:59"
+        "start": "2026-08-15 10:00",
+        "end": "2026-08-15 23:59"
     }
 ]
