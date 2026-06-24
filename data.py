@@ -225,10 +225,10 @@ class EventEntry(TypedDict, total=False):
     end: str    # Format: "YYYY-MM-DD HH:MM"
 
 events: List[EventEntry] = [
-    # {
-    #     "name": "Vejfest7",
-    #     "description": "Husk drikkevarer",
-    #     "start": "2026-02-11 12:00",
-    #     "end": "2026-02-11 23:59"
-    # }
+    {
+        "name": "🥳 - Lærkevej vejfest",
+        "description": "10.00 - Teltopsætning \n16.00 - spil \n17.00 - velkomst og festen går i gang",
+        "start": "2026-08-25 10:00",
+        "end": "2026-08-25 23:59"
+    }
 ]
