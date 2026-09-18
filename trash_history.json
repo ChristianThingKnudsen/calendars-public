@@ -162,5 +162,13 @@
             "Restaffald",
             "Madaffald"
         ]
+    },
+    {
+        "dato": "2026-09-18T00:00:00Z",
+        "fraktioner": [
+            "Pap",
+            "Papir",
+            "Tekstilaffald"
+        ]
     }
 ]
