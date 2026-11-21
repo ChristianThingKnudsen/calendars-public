@@ -29787,3 +29787,19 @@ No trash events added to history
 🗑️ - Fandt 31 tømninger der tilføjes nu
 ==================================================
 'laerkevej_events.ics' sucessfully generated!
+[main 36b7be4] Auto-update: 2026-11-21 17:55
+ 2 files changed, 507 insertions(+), 491 deletions(-)
+To github.com:ChristianThingKnudsen/calendars-public.git
+   4cf6976..36b7be4  main -> main
+Already up to date.
+==================================================
+2026-11-21 18:55:02
+==================================================
+File 'laerkevej_events.ics' has been deleted successfully.
+🗑️ - Fandt 31 tidligere tømninger der tilføjes nu
+🗑️ - API Error 405. Falling back...
+🗑️ - Using fallback data from trash_data_fallback.json
+No trash events added to history
+🗑️ - Fandt 31 tømninger der tilføjes nu
+==================================================
+'laerkevej_events.ics' sucessfully generated!
