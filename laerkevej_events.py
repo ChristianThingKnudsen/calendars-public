@@ -134,125 +134,121 @@ try:
       cal.events.add(e)
 
 
-#   # Old trash events (for history)
-#   trash_history_file = "trash_history.json"
-#   trash_history_data = []
-#   if os.path.exists(trash_history_file):
-#       with open(trash_history_file, 'r', encoding='utf-8') as f:
-#           try:
-#               trash_history_data = json.load(f)
-#           except json.JSONDecodeError:
-#               trash_history_data = []
+  # Old trash events (for history)
+  trash_history_file = "trash_history.json"
+  trash_history_data = []
+  if os.path.exists(trash_history_file):
+      with open(trash_history_file, 'r', encoding='utf-8') as f:
+          try:
+              trash_history_data = json.load(f)
+          except json.JSONDecodeError:
+              trash_history_data = []
 
-#   print(trash_prefix(f"Fandt {len(trash_history_data)} tidligere tømninger der tilføjes nu"))
+  print(trash_prefix(f"Fandt {len(trash_history_data)} tidligere tømninger der tilføjes nu"))
 
-#   # Extract dates we already have to avoid duplicates
-#   existing_trash_dates = {item["dato"] for item in trash_history_data}
+  # Extract dates we already have to avoid duplicates
+  existing_trash_dates = {item["dato"] for item in trash_history_data}
 
-#   # Dynamic trash events
-#   url = "https://mit.renosyd.dk/_query/tommekalender-page-content.Hent%20T%C3%B8mmekalender"
-#   body = {
-#       "url": "https://skoda-selvbetjeningsapi.renosyd.dk/api/v1/toemmekalender?nummer=018615",
-#       "method": "GET",
-#       "auth": None,
-#       "headers": {}
-#   }
-#   trash_data = {}
-#   cache_file = "trash_data_fallback.json"
-#   response = requests.post(url, json=body, timeout=15)
-#   try:
-#       response = requests.post(url, json=body, timeout=15)
-#       if response.status_code == 200:
-#           json_data = response.json()
-#           # Double-check we actually got data before saving
-#           if json_data and len(json_data) > 0:
-#               trash_data = json_data[0]
-#               # Save the "Last Known Good" version
-#               with open(cache_file, 'w') as f:
-#                   json.dump(trash_data, f, indent=4)
-#               print(trash_prefix("Sucessfully retrieved trash data from api!"))
-#           else:
-#               print(trash_prefix("API returned empty list. Falling back..."))
-#               raise ValueError("Empty Data")
+  # Dynamic trash events
+  url = "https://skoda-selvbetjeningsapi.renosyd.dk/api/v1/toemmekalender"
+  params = {"nummer": "018615"}
+  headers = {
+      "Accept": "application/json",
+      "User-Agent": "Mozilla/5.0 (compatible; laerkevej-calendar/1.0)",
+  }
+  trash_data = {}
+  cache_file = "trash_data_fallback.json"
 
-#       else:
-#           print(trash_prefix(f"API Error {response.status_code}. Falling back..."))
-#           raise ConnectionError
+  try:
+      response = requests.get(url, params=params, headers=headers, timeout=15)
+      response.raise_for_status()
+      json_data = response.json()
+      # Double-check we actually got data before saving
+      if not json_data:
+          raise ValueError("Empty Data")
+      trash_data = json_data[0]
+      if not trash_data.get("planlagtetømninger"):
+          raise ValueError("No planlagtetømninger in response")
+      # Save the "Last Known Good" version
+      with open(cache_file, 'w', encoding='utf-8') as f:
+          json.dump(trash_data, f, indent=4, ensure_ascii=False)
+      print(trash_prefix("Successfully retrieved trash data from API!"))
 
-#   except (requests.exceptions.RequestException, ValueError, ConnectionError, IndexError):
-#       # Try to load the file saved from a previous successful run
-#       if os.path.exists(cache_file):
-#           with open(cache_file, 'r') as f:
-#               trash_data = json.load(f)
-#               print(trash_prefix(f"Using fallback data from {cache_file}"))
-#       else:
-#           print(trash_prefix("No fallback file found and API failed."))
-#           trash_data = {} # Final fallback to empty object
+  except (requests.exceptions.RequestException, ValueError, IndexError, KeyError, TypeError) as exc:
+      print(trash_prefix(f"API failed ({type(exc).__name__}: {exc}). Falling back..."))
+      # Try to load the file saved from a previous successful run
+      if os.path.exists(cache_file):
+          with open(cache_file, 'r', encoding='utf-8') as f:
+              trash_data = json.load(f)
+          print(trash_prefix(f"Using fallback data from {cache_file}"))
+      else:
+          print(trash_prefix("No fallback file found and API failed."))
+          trash_data = {}  # Final fallback to empty object
 
-#   upcoming_empties = trash_data.get("planlagtetømninger", [])
-#   if not isinstance(upcoming_empties, list):
-#       upcoming_empties = []
+  upcoming_empties = trash_data.get("planlagtetømninger", [])
+  if not isinstance(upcoming_empties, list):
+      upcoming_empties = []
 
-#   # Fake test event
-#   # fake_event = {
-#   #     "dato": "2026-02-10T00:00:00Z",  # Use a date in the near future
-#   #     "fraktioner": ["Restaffald", "Genbrug"]
-#   # }
-#   # upcoming_empties.append(fake_event)
+  # Fake test event
+  # fake_event = {
+  #     "dato": "2026-02-10T00:00:00Z",  # Use a date in the near future
+  #     "fraktioner": ["Restaffald", "Genbrug"]
+  # }
+  # upcoming_empties.append(fake_event)
 
-#   new_history_added = False
-#   current_date_iso = datetime.now(timezone.utc).date().isoformat()
-#   # Fake current date if nessecary for test
-#   # current_date_iso = (datetime.now(timezone.utc) + timedelta(days=8)).date().isoformat()
+  new_history_added = False
+  current_date_iso = datetime.now(timezone.utc).date().isoformat()
+  # Fake current date if nessecary for test
+  # current_date_iso = (datetime.now(timezone.utc) + timedelta(days=8)).date().isoformat()
 
-#   for entry in upcoming_empties:
-#       if entry["dato"] not in existing_trash_dates:
-#           event_date = entry["dato"].split("T")[0]
-#           if event_date <= current_date_iso:
-#               trash_history_data.append(entry)
-#               existing_trash_dates.add(entry["dato"])
-#               new_history_added = True
-#               print(trash_prefix(f"Archived past event: {entry['dato']}"))
+  for entry in upcoming_empties:
+      if entry["dato"] not in existing_trash_dates:
+          event_date = entry["dato"].split("T")[0]
+          if event_date <= current_date_iso:
+              trash_history_data.append(entry)
+              existing_trash_dates.add(entry["dato"])
+              new_history_added = True
+              print(trash_prefix(f"Archived past event: {entry['dato']}"))
 
-#   if new_history_added:
-#       print("Trash event(s) added to history")
-#       trash_history_data.sort(key=lambda x: x["dato"])
-#       with open(trash_history_file, 'w', encoding='utf-8') as f:
-#           json.dump(trash_history_data, f, indent=4, ensure_ascii=False)
-#   else:
-#       print("No trash events added to history")
+  if new_history_added:
+      print("Trash event(s) added to history")
+      trash_history_data.sort(key=lambda x: x["dato"])
+      with open(trash_history_file, 'w', encoding='utf-8') as f:
+          json.dump(trash_history_data, f, indent=4, ensure_ascii=False)
+  else:
+      print("No trash events added to history")
 
 
-#   number_of_trash_events = len(upcoming_empties)
-#   raw_future_events = upcoming_empties[:9] if number_of_trash_events >= 9 else upcoming_empties
-#   # Ensure no duplicate events are made
-#   future_trash_events = [
-#       e for e in raw_future_events
-#       if e["dato"] not in existing_trash_dates
-#   ]
-#   trash_events_to_process = future_trash_events + trash_history_data
+  number_of_trash_events = len(upcoming_empties)
+  raw_future_events = upcoming_empties[:9] if number_of_trash_events >= 9 else upcoming_empties
+  # Ensure no duplicate events are made
+  future_trash_events = [
+      e for e in raw_future_events
+      if e["dato"] not in existing_trash_dates
+  ]
+  trash_events_to_process = future_trash_events + trash_history_data
 
-#   print(trash_prefix(f"Fandt {len(trash_events_to_process)} tømninger der tilføjes nu"))
+  print(trash_prefix(f"Fandt {len(trash_events_to_process)} tømninger der tilføjes nu"))
 
-#   for trash_event in trash_events_to_process:
-#     e = Event()
-#     event_name = trash_event_to_name(trash_event)
-#     e.name = event_name
-#     e.description = trash_prefix("Skrald hentes i morgen tidlig, så det skal stilles ud til vejen nu")
-#     # Start and end time
-#     dk_tz = zoneinfo.ZoneInfo("Europe/Copenhagen")
-#     # Parse the time from your list
-#     naive_dt = get_trash_event_date(trash_event)
-#     naive_end = naive_dt + timedelta(hours=2)
-#     # This automatically detects if it's +1 (Winter) or +2 (Summer)
-#     local_start = naive_dt.replace(tzinfo=dk_tz)
-#     local_end = naive_end.replace(tzinfo=dk_tz)
-#     # Convert to UTC for the .ics file
-#     e.begin = local_start.astimezone(timezone.utc)
-#     e.end = local_end.astimezone(timezone.utc)
-#     e.created = now
-#     add_apple_alarm(e, 3, summary=f"Husk: {event_name}")
-#     cal.events.add(e)
+  for trash_event in trash_events_to_process:
+    e = Event()
+    event_name = trash_event_to_name(trash_event)
+    e.name = event_name
+    e.description = trash_prefix("Skrald hentes i morgen tidlig, så det skal stilles ud til vejen nu")
+    # Start and end time
+    dk_tz = zoneinfo.ZoneInfo("Europe/Copenhagen")
+    # Parse the time from your list
+    naive_dt = get_trash_event_date(trash_event)
+    naive_end = naive_dt + timedelta(hours=2)
+    # This automatically detects if it's +1 (Winter) or +2 (Summer)
+    local_start = naive_dt.replace(tzinfo=dk_tz)
+    local_end = naive_end.replace(tzinfo=dk_tz)
+    # Convert to UTC for the .ics file
+    e.begin = local_start.astimezone(timezone.utc)
+    e.end = local_end.astimezone(timezone.utc)
+    e.created = now
+    add_apple_alarm(e, 3, summary=f"Husk: {event_name}")
+    cal.events.add(e)
 
 
 #   #Electric events
